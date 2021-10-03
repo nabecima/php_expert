@@ -17,7 +17,17 @@
           label="Solo field"
           solo
         ></v-select>
-        <v-expansion-panels focusable>
+
+        <div class="progress" v-if="loading">
+          <v-progress-circular
+            :size="50"
+            color="primary"
+            indeterminate
+            absolute
+            top
+          ></v-progress-circular>
+        </div>
+        <v-expansion-panels focusable v-if="!loading">
           <template v-for="(item, i) in lists">
             <v-expansion-panel v-if="item.genre == select" :key="i">
               <v-expansion-panel-header>
@@ -63,6 +73,7 @@ export default {
       lists: [],
       items: ["all", "array", "string"],
       select: "all",
+      loading: true,
     };
   },
   methods: {
@@ -84,7 +95,7 @@ export default {
       )
       .then((res) => {
         this.lists = this.shuffle(res.data);
-        // this.lists = res.data;
+        this.loading = false;
       });
   },
 };
@@ -97,5 +108,13 @@ pre {
 
 .select {
   width: 100px;
+}
+
+.progress {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
 }
 </style>
