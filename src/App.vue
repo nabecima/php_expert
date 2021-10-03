@@ -10,14 +10,20 @@
 
     <v-main>
       <v-container>
-        <v-select
-          class="select"
-          v-model="select"
-          :items="items"
-          label="Solo field"
-          solo
-        ></v-select>
-
+        <v-row>
+          <v-col md="2" sm="1">
+            <v-select
+              class="select"
+              v-model="select"
+              :items="items"
+              label="Solo field"
+              solo
+            ></v-select
+          ></v-col>
+          <v-col sm="1">
+            <v-btn class="reset" color="primary" @click="clear">Reset</v-btn>
+          </v-col>
+        </v-row>
         <div class="progress" v-if="loading">
           <v-progress-circular
             :size="50"
@@ -28,8 +34,14 @@
           ></v-progress-circular>
         </div>
         <v-expansion-panels focusable v-if="!loading">
-          <template v-for="(item, i) in lists">
-            <v-expansion-panel v-if="item.genre == select" :key="i">
+          <template v-for="item in lists">
+            <v-expansion-panel v-if="item.genre == select" :key="item.id">
+              <v-checkbox
+                v-model="favorites"
+                :value="item.id"
+                @change="storage(item.id, item.function)"
+              >
+              </v-checkbox>
               <v-expansion-panel-header>
                 <pre>{{ item.function }}</pre>
               </v-expansion-panel-header>
@@ -37,12 +49,35 @@
                 <pre>{{ item.result }}</pre>
               </v-expansion-panel-content>
             </v-expansion-panel>
-            <v-expansion-panel v-else-if="select == 'all'" :key="i">
+            <v-expansion-panel v-else-if="select == 'all'" :key="item.id">
+              <v-checkbox
+                v-model="favorites"
+                :value="item.id"
+                @change="storage(item.id, item.function)"
+              >
+              </v-checkbox>
               <v-expansion-panel-header>
                 <pre>{{ item.function }}</pre>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <pre>{{ item.result }}</pre>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel
+              v-else-if="select == 'favorites' && check(item.id)"
+              :key="item.id"
+            >
+              <v-checkbox
+                v-model="favorites"
+                :value="item.id"
+                @change="storage(item.id, item.function)"
+              >
+              </v-checkbox>
+              <v-expansion-panel-header>
+                <pre>{{ item.function }}</pre>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                {{ item.result }}
               </v-expansion-panel-content>
             </v-expansion-panel>
           </template>
@@ -71,9 +106,10 @@ export default {
   data() {
     return {
       lists: [],
-      items: ["all", "array", "string"],
+      items: ["all", "array", "string", "favorites"],
       select: "all",
       loading: true,
+      favorites: [],
     };
   },
   methods: {
@@ -84,19 +120,35 @@ export default {
       }
       return array;
     },
+    storage(id, example) {
+      if (this.favorites.indexOf(id) !== -1) {
+        localStorage.setItem(id, example);
+      } else {
+        localStorage.removeItem(id);
+      }
+    },
+    clear() {
+      if (confirm("チェックした問題を全てリセットしますか？")) {
+        localStorage.clear();
+        this.favorites = [];
+      }
+    },
+    check(id) {
+      return id in localStorage;
+    },
   },
 
   mounted() {
     const CORS = "https://cors.bridged.cc/";
-    axios
-      .get(
-        CORS +
-          "https://script.google.com/macros/s/AKfycbyCOpkkPEkW30BgnWNq2V5uNrYd5406Yd4TkAQVq9-nhhN3ruXJo7cPxihifrhVceqA/exec"
-      )
-      .then((res) => {
-        this.lists = this.shuffle(res.data);
-        this.loading = false;
-      });
+    const SHEET =
+      "https://script.google.com/macros/s/AKfycbwkFSXgj1vkAKaxO2WHeVj2rGLmn-N6mInXtfi5GUHCCM-j1cw6mDB6Ig6gxRrSjbVg/exec";
+    axios.get(CORS + SHEET).then((res) => {
+      this.lists = this.shuffle(res.data);
+      for (let key in localStorage) {
+        this.favorites.push(key);
+      }
+      this.loading = false;
+    });
   },
 };
 </script>
@@ -106,15 +158,15 @@ pre {
   white-space: pre-wrap;
 }
 
-.select {
-  width: 100px;
-}
-
 .progress {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
+}
+
+.reset {
+  padding: 12px;
 }
 </style>
