@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-toolbar-title class="font-weight-bold"
+      <v-toolbar-title class="font-weight-bold" @click="$vuetify.goTo(0)"
         >PHP5技術者認定試験上級</v-toolbar-title
       >
       <!-- <div class="d-flex align-center">
@@ -29,16 +29,44 @@
 
     <v-main>
       <v-container>
+        <v-select
+          class="select"
+          v-model="select"
+          :items="items"
+          label="Solo field"
+          solo
+        ></v-select>
         <v-expansion-panels focusable>
           <v-expansion-panel v-for="(item, i) in lists" :key="i">
-            <v-expansion-panel-header>
-              <pre>{{ item.function }}</pre>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <pre>{{ item.result }}</pre>
-            </v-expansion-panel-content>
+            <template v-if="item.genre == select">
+              <v-expansion-panel-header>
+                <pre>{{ item.function }}</pre>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <pre>{{ item.result }}</pre>
+              </v-expansion-panel-content>
+            </template>
+            <template v-else-if="select == 'all'">
+              <v-expansion-panel-header>
+                <pre>{{ item.function }}</pre>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <pre>{{ item.result }}</pre>
+              </v-expansion-panel-content>
+            </template>
           </v-expansion-panel>
         </v-expansion-panels>
+        <v-btn
+          fab
+          large
+          bottom
+          right
+          fixed
+          color="primary"
+          @click="$vuetify.goTo(0)"
+        >
+          <v-icon>mdi-chevron-up</v-icon>
+        </v-btn>
       </v-container>
     </v-main>
   </v-app>
@@ -57,6 +85,8 @@ export default {
   data() {
     return {
       lists: [],
+      items: ["all", "array", "string"],
+      select: "all",
     };
   },
   methods: {
@@ -74,7 +104,7 @@ export default {
     axios
       .get(
         CORS +
-          "https://script.google.com/macros/s/AKfycbxAS-pYztCVzgFDv4NHvhR3SlWVfrR9qFsIK2aBWB6FTLztfbXrIhEWIW33aXPWKs91/exec"
+          "https://script.google.com/macros/s/AKfycbyCOpkkPEkW30BgnWNq2V5uNrYd5406Yd4TkAQVq9-nhhN3ruXJo7cPxihifrhVceqA/exec"
       )
       .then((res) => {
         this.lists = this.shuffle(res.data);
@@ -87,5 +117,9 @@ export default {
 pre {
   line-height: 1.5;
   white-space: pre-wrap;
+}
+
+.select {
+  width: 100px;
 }
 </style>
