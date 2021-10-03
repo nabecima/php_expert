@@ -37,6 +37,10 @@
           <template v-for="item in lists">
             <v-expansion-panel v-if="item.genre == select" :key="item.id">
               <v-checkbox
+                class="checkbox"
+                on-icon="mdi-star"
+                off-icon="mdi-star-outline"
+                color="orange"
                 v-model="favorites"
                 :value="item.id"
                 @change="storage(item.id, item.function)"
@@ -51,6 +55,10 @@
             </v-expansion-panel>
             <v-expansion-panel v-else-if="select == 'all'" :key="item.id">
               <v-checkbox
+                class="checkbox"
+                on-icon="mdi-star"
+                off-icon="mdi-star-outline"
+                color="orange"
                 v-model="favorites"
                 :value="item.id"
                 @change="storage(item.id, item.function)"
@@ -68,6 +76,10 @@
               :key="item.id"
             >
               <v-checkbox
+                class="checkbox"
+                on-icon="mdi-star"
+                off-icon="mdi-star-outline"
+                color="orange"
                 v-model="favorites"
                 :value="item.id"
                 @change="storage(item.id, item.function)"
@@ -168,5 +180,13 @@ pre {
 
 .reset {
   padding: 12px;
+}
+
+.checkbox {
+  padding-left: 22px;
+}
+
+.v-expansion-panel-header {
+  padding-top: 0 !important;
 }
 </style>
