@@ -4,25 +4,6 @@
       <v-toolbar-title class="font-weight-bold" @click="$vuetify.goTo(0)"
         >PHP5技術者認定試験上級</v-toolbar-title
       >
-      <!-- <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div> -->
 
       <v-spacer></v-spacer>
     </v-app-bar>
@@ -37,24 +18,24 @@
           solo
         ></v-select>
         <v-expansion-panels focusable>
-          <v-expansion-panel v-for="(item, i) in lists" :key="i">
-            <template v-if="item.genre == select">
+          <template v-for="(item, i) in lists">
+            <v-expansion-panel v-if="item.genre == select" :key="i">
               <v-expansion-panel-header>
                 <pre>{{ item.function }}</pre>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <pre>{{ item.result }}</pre>
               </v-expansion-panel-content>
-            </template>
-            <template v-else-if="select == 'all'">
+            </v-expansion-panel>
+            <v-expansion-panel v-else-if="select == 'all'" :key="i">
               <v-expansion-panel-header>
                 <pre>{{ item.function }}</pre>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
                 <pre>{{ item.result }}</pre>
               </v-expansion-panel-content>
-            </template>
-          </v-expansion-panel>
+            </v-expansion-panel>
+          </template>
         </v-expansion-panels>
         <v-btn
           fab
@@ -73,14 +54,9 @@
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld";
 import axios from "axios";
 export default {
   name: "App",
-
-  // components: {
-  //   HelloWorld,
-  // },
 
   data() {
     return {
