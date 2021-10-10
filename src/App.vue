@@ -11,7 +11,7 @@
     <v-main>
       <v-container>
         <v-row>
-          <v-col>
+          <v-col md="2" sm="1">
             <v-select
               class="select"
               v-model="select"
@@ -20,7 +20,7 @@
               solo
             ></v-select
           ></v-col>
-          <v-col>
+          <v-col sm="1">
             <v-btn class="reset" color="primary" @click="clear">Reset</v-btn>
           </v-col>
         </v-row>
