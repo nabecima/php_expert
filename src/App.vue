@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <v-toolbar-title class="font-weight-bold" @click="$vuetify.goTo(0)"
+      <v-toolbar-title class="font-weight-bold title" @click="$vuetify.goTo(0)"
         >PHP5技術者認定試験上級</v-toolbar-title
       >
 
@@ -165,6 +165,10 @@ export default {
 };
 </script>
 <style>
+.title {
+  cursor: pointer;
+}
+
 pre {
   line-height: 1.5;
   white-space: pre-wrap;
