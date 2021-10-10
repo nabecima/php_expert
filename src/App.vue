@@ -35,7 +35,7 @@
         </div>
         <v-expansion-panels focusable v-if="!loading">
           <template v-for="item in lists">
-            <v-expansion-panel v-if="item.genre == select" :key="item.id">
+            <v-expansion-panel v-if="item.type == select" :key="item.id">
               <v-checkbox
                 class="checkbox"
                 on-icon="mdi-star"
@@ -43,7 +43,7 @@
                 color="orange"
                 v-model="favorites"
                 :value="item.id"
-                @change="storage(item.id, item.function)"
+                @change="storage(item.id, item.type)"
               >
               </v-checkbox>
               <v-expansion-panel-header>
@@ -61,7 +61,7 @@
                 color="orange"
                 v-model="favorites"
                 :value="item.id"
-                @change="storage(item.id, item.function)"
+                @change="storage(item.id, item.type)"
               >
               </v-checkbox>
               <v-expansion-panel-header>
@@ -82,7 +82,7 @@
                 color="orange"
                 v-model="favorites"
                 :value="item.id"
-                @change="storage(item.id, item.function)"
+                @change="storage(item.id, item.type)"
               >
               </v-checkbox>
               <v-expansion-panel-header>
@@ -132,9 +132,9 @@ export default {
       }
       return array;
     },
-    storage(id, example) {
+    storage(id, type) {
       if (this.favorites.indexOf(id) !== -1) {
-        localStorage.setItem(id, example);
+        localStorage.setItem(id, type);
       } else {
         localStorage.removeItem(id);
       }
