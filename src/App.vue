@@ -11,7 +11,7 @@
     <v-main>
       <v-container>
         <v-row>
-          <v-col md="2" sm="1">
+          <v-col>
             <v-select
               class="select"
               v-model="select"
@@ -20,7 +20,7 @@
               solo
             ></v-select
           ></v-col>
-          <v-col sm="1">
+          <v-col>
             <v-btn class="reset" color="primary" @click="clear">Reset</v-btn>
           </v-col>
         </v-row>
@@ -172,6 +172,7 @@ export default {
 pre {
   line-height: 1.5;
   white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .progress {
