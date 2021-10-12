@@ -82,7 +82,7 @@
               </v-expansion-panel-content>
             </v-expansion-panel>
             <v-expansion-panel
-              v-else-if="select == 'favorites' && check(item.id)"
+              v-else-if="select == 'favorites' && isId(item.id)"
               :key="item.id"
             >
               <v-checkbox
@@ -132,7 +132,7 @@ export default {
       select: "all",
       loading: true,
       favorites: [],
-      flag: false,
+      flag: true,
     };
   },
   methods: {
@@ -150,11 +150,7 @@ export default {
         localStorage.removeItem(id);
       }
 
-      if (localStorage.length === 0) {
-        this.flag = true;
-      } else {
-        this.flag = false;
-      }
+      this.flag = this.checkLocalStorage();
     },
     clear() {
       if (confirm("チェックした問題を全てリセットしますか？")) {
@@ -163,8 +159,15 @@ export default {
         this.flag = true;
       }
     },
-    check(id) {
+    isId(id) {
       return id in localStorage;
+    },
+    checkLocalStorage() {
+      if (localStorage.length === 0) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
 
@@ -177,6 +180,7 @@ export default {
         this.favorites.push(key);
       }
       this.loading = false;
+      this.flag = this.checkLocalStorage();
     });
   },
 };
