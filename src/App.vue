@@ -33,6 +33,14 @@
             top
           ></v-progress-circular>
         </div>
+        <v-alert
+          dense
+          type="info"
+          class="font-weight-bold"
+          v-show="select == 'xml'"
+        >
+          メソッドとそのメソッドが受け取れる値の説明をしなさい
+        </v-alert>
         <v-expansion-panels focusable v-if="!loading">
           <template v-for="item in lists">
             <v-expansion-panel v-if="item.type == select" :key="item.id">
@@ -118,7 +126,7 @@ export default {
   data() {
     return {
       lists: [],
-      items: ["all", "array", "string", "regex", "favorites"],
+      items: ["all", "array", "string", "xml", "regex", "favorites"],
       select: "all",
       loading: true,
       favorites: [],
