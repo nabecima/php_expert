@@ -159,10 +159,11 @@ export default {
   },
 
   mounted() {
-    const CORS = "https://cors.bridged.cc/";
+    // const CORS = "https://cors.bridged.cc/";
     const SHEET =
-      "https://script.google.com/macros/s/AKfycbwkFSXgj1vkAKaxO2WHeVj2rGLmn-N6mInXtfi5GUHCCM-j1cw6mDB6Ig6gxRrSjbVg/exec";
-    axios.get(CORS + SHEET).then((res) => {
+      "https://script.google.com/macros/s/AKfycbyzvluUr38dkwWSOxO2GTAravixfBJNkBEJ4mc1VGC4X9Np-CwTSZH2gZaDIyVZcAVL/exec";
+    // axios.get(CORS + SHEET).then((res) => {
+    axios.get(SHEET, { crossDomain: true }).then((res) => {
       this.lists = this.shuffle(res.data);
       for (let key in localStorage) {
         this.favorites.push(key);
