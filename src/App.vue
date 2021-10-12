@@ -21,7 +21,9 @@
             ></v-select
           ></v-col>
           <v-col class="flex-grow-0 flex-shrink-0">
-            <v-btn class="reset" color="primary" @click="clear">Reset</v-btn>
+            <v-btn class="reset" color="primary" @click="clear" :disabled="flag"
+              >Reset</v-btn
+            >
           </v-col>
         </v-row>
         <div class="progress" v-if="loading">
@@ -130,6 +132,7 @@ export default {
       select: "all",
       loading: true,
       favorites: [],
+      flag: false,
     };
   },
   methods: {
@@ -146,11 +149,18 @@ export default {
       } else {
         localStorage.removeItem(id);
       }
+
+      if (localStorage.length === 0) {
+        this.flag = true;
+      } else {
+        this.flag = false;
+      }
     },
     clear() {
       if (confirm("チェックした問題を全てリセットしますか？")) {
         localStorage.clear();
         this.favorites = [];
+        this.flag = true;
       }
     },
     check(id) {
@@ -159,10 +169,8 @@ export default {
   },
 
   mounted() {
-    // const CORS = "https://cors.bridged.cc/";
     const SHEET =
       "https://script.google.com/macros/s/AKfycbyzvluUr38dkwWSOxO2GTAravixfBJNkBEJ4mc1VGC4X9Np-CwTSZH2gZaDIyVZcAVL/exec";
-    // axios.get(CORS + SHEET).then((res) => {
     axios.get(SHEET, { crossDomain: true }).then((res) => {
       this.lists = this.shuffle(res.data);
       for (let key in localStorage) {
