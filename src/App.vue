@@ -99,7 +99,7 @@
                 <pre>{{ item.function }}</pre>
               </v-expansion-panel-header>
               <v-expansion-panel-content>
-                {{ item.result }}
+                <pre>{{ item.result }}</pre>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </template>
