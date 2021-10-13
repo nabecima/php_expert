@@ -21,6 +21,11 @@
             ></v-select
           ></v-col>
           <v-col class="flex-grow-0 flex-shrink-0">
+            <v-btn class="reset" color="primary" @click="lists = shuffle(lists)"
+              >Shuffle</v-btn
+            >
+          </v-col>
+          <v-col class="flex-grow-0 flex-shrink-0">
             <v-btn class="reset" color="primary" @click="clear" :disabled="flag"
               >Reset</v-btn
             >
