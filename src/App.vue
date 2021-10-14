@@ -40,14 +40,36 @@
             top
           ></v-progress-circular>
         </div>
-        <v-alert
-          dense
-          type="info"
-          class="font-weight-bold"
-          v-show="select == 'xml'"
-        >
-          メソッドとそのメソッドが受け取れる値の説明をしなさい
-        </v-alert>
+        <template v-if="select == 'xml'">
+          <v-alert dense type="info" class="font-weight-bold">
+            メソッドとそのメソッドが受け取れる値の説明をしなさい
+          </v-alert>
+        </template>
+        <template v-else-if="select == 'mdb2'">
+          <v-alert dense type="info" class="font-weight-bold">
+            問題にあるメソッドを実行した時の結果を答えなさい
+          </v-alert>
+          <v-simple-table class="table">
+            <template v-slot:default>
+              <caption class="text-left">
+                testテーブル
+              </caption>
+              <thead>
+                <tr>
+                  <th class="text-left">a</th>
+                  <th class="text-left">b</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in data" :key="item.name">
+                  <td>{{ item.a }}</td>
+                  <td>{{ item.b }}</td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
+          <pre class="mb-1">$db = MDB2::connect(DSN);</pre>
+        </template>
         <v-expansion-panels focusable v-if="!loading">
           <template v-for="item in lists">
             <v-expansion-panel v-if="item.type == select" :key="item.id">
@@ -133,11 +155,15 @@ export default {
   data() {
     return {
       lists: [],
-      items: ["all", "array", "string", "xml", "regex", "favorites"],
+      items: ["all", "array", "string", "mdb2", "xml", "regex", "favorites"],
       select: "all",
       loading: true,
       favorites: [],
       flag: true,
+      data: [
+        { a: 1, b: 10 },
+        { a: 2, b: 20 },
+      ],
     };
   },
   methods: {
@@ -219,5 +245,9 @@ pre {
 
 .v-expansion-panel-header {
   padding-top: 0 !important;
+}
+
+.table {
+  max-width: 500px !important;
 }
 </style>
