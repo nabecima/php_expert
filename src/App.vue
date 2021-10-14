@@ -155,7 +155,16 @@ export default {
   data() {
     return {
       lists: [],
-      items: ["all", "array", "string", "mdb2", "xml", "regex", "favorites"],
+      items: [
+        "all",
+        "array",
+        "string",
+        "mdb2",
+        "xml",
+        "error",
+        "regex",
+        "favorites",
+      ],
       select: "all",
       loading: true,
       favorites: [],
