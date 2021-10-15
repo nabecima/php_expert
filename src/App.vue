@@ -163,6 +163,7 @@ export default {
         "xml",
         "buffer",
         "error",
+        "json",
         "regex",
         "favorites",
       ],
