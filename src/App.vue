@@ -161,6 +161,7 @@ export default {
         "string",
         "mdb2",
         "xml",
+        "buffer",
         "error",
         "regex",
         "favorites",
