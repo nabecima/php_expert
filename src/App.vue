@@ -15,7 +15,7 @@
             <v-select
               class="select"
               v-model="select"
-              :items="items"
+              :items="types"
               label="Solo field"
               solo
             ></v-select
@@ -155,18 +155,7 @@ export default {
   data() {
     return {
       lists: [],
-      items: [
-        "all",
-        "array",
-        "string",
-        "mdb2",
-        "xml",
-        "buffer",
-        "error",
-        "json",
-        "regex",
-        "favorites",
-      ],
+      types: [],
       select: "all",
       loading: true,
       favorites: [],
@@ -217,7 +206,9 @@ export default {
     const SHEET =
       "https://script.google.com/macros/s/AKfycbyzvluUr38dkwWSOxO2GTAravixfBJNkBEJ4mc1VGC4X9Np-CwTSZH2gZaDIyVZcAVL/exec";
     axios.get(SHEET, { crossDomain: true }).then((res) => {
-      this.lists = this.shuffle(res.data);
+      this.lists = this.shuffle(res.data.qa);
+      console.log(res.data);
+      this.types = res.data.types;
       for (let key in localStorage) {
         this.favorites.push(key);
       }
