@@ -10,27 +10,6 @@
 
     <v-main>
       <v-container>
-        <v-row>
-          <v-col class="flex-grow-0 flex-shrink-0">
-            <v-select
-              class="select"
-              v-model="select"
-              :items="types"
-              label="Solo field"
-              solo
-            ></v-select
-          ></v-col>
-          <v-col class="flex-grow-0 flex-shrink-0">
-            <v-btn class="reset" color="primary" @click="lists = shuffle(lists)"
-              >Shuffle</v-btn
-            >
-          </v-col>
-          <v-col class="flex-grow-0 flex-shrink-0">
-            <v-btn class="reset" color="primary" @click="clear" :disabled="flag"
-              >Reset</v-btn
-            >
-          </v-col>
-        </v-row>
         <div class="progress" v-if="loading">
           <v-progress-circular
             :size="50"
@@ -40,108 +19,138 @@
             top
           ></v-progress-circular>
         </div>
-        <template v-if="select == 'xml'">
-          <v-alert dense type="info" class="font-weight-bold">
-            メソッドとそのメソッドが受け取れる値の説明をしなさい
-          </v-alert>
-        </template>
-        <template v-else-if="select == 'mdb2'">
-          <v-alert dense type="info" class="font-weight-bold">
-            問題にあるメソッドを実行した時の結果を答えなさい
-          </v-alert>
-          <v-simple-table class="table">
-            <template v-slot:default>
-              <caption class="text-left">
-                testテーブル
-              </caption>
-              <thead>
-                <tr>
-                  <th class="text-left">a</th>
-                  <th class="text-left">b</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in data" :key="item.name">
-                  <td>{{ item.a }}</td>
-                  <td>{{ item.b }}</td>
-                </tr>
-              </tbody>
-            </template>
-          </v-simple-table>
-          <pre class="mb-1">$db = MDB2::connect(DSN);</pre>
-        </template>
-        <v-expansion-panels focusable v-if="!loading">
-          <template v-for="item in lists">
-            <v-expansion-panel v-if="item.type == select" :key="item.id">
-              <v-checkbox
-                class="checkbox"
-                on-icon="mdi-star"
-                off-icon="mdi-star-outline"
-                color="orange"
-                v-model="favorites"
-                :value="item.id"
-                @change="storage(item.id, item.type)"
+        <template v-else>
+          <v-row>
+            <v-col class="flex-grow-0 flex-shrink-0">
+              <v-select
+                class="select"
+                v-model="select"
+                :items="types"
+                label="Solo field"
+                solo
+              ></v-select
+            ></v-col>
+            <v-col class="flex-grow-0 flex-shrink-0">
+              <v-btn
+                class="reset"
+                color="primary"
+                @click="lists = shuffle(lists)"
+                >Shuffle</v-btn
               >
-              </v-checkbox>
-              <v-expansion-panel-header>
-                <pre>{{ item.function }}</pre>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <pre>{{ item.result }}</pre>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            <v-expansion-panel v-else-if="select == 'all'" :key="item.id">
-              <v-checkbox
-                class="checkbox"
-                on-icon="mdi-star"
-                off-icon="mdi-star-outline"
-                color="orange"
-                v-model="favorites"
-                :value="item.id"
-                @change="storage(item.id, item.type)"
+            </v-col>
+            <v-col class="flex-grow-0 flex-shrink-0">
+              <v-btn
+                class="reset"
+                color="primary"
+                @click="clear"
+                :disabled="flag"
+                >Reset</v-btn
               >
-              </v-checkbox>
-              <v-expansion-panel-header>
-                <pre>{{ item.function }}</pre>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <pre>{{ item.result }}</pre>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-            <v-expansion-panel
-              v-else-if="select == 'favorites' && isId(item.id)"
-              :key="item.id"
-            >
-              <v-checkbox
-                class="checkbox"
-                on-icon="mdi-star"
-                off-icon="mdi-star-outline"
-                color="orange"
-                v-model="favorites"
-                :value="item.id"
-                @change="storage(item.id, item.type)"
-              >
-              </v-checkbox>
-              <v-expansion-panel-header>
-                <pre>{{ item.function }}</pre>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <pre>{{ item.result }}</pre>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
+            </v-col>
+          </v-row>
+          <template v-if="select == 'xml'">
+            <v-alert dense type="info" class="font-weight-bold">
+              メソッドとそのメソッドが受け取れる値の説明をしなさい
+            </v-alert>
           </template>
-        </v-expansion-panels>
-        <v-btn
-          fab
-          large
-          bottom
-          right
-          fixed
-          color="primary"
-          @click="$vuetify.goTo(0)"
-        >
-          <v-icon>mdi-chevron-up</v-icon>
-        </v-btn>
+          <template v-else-if="select == 'mdb2'">
+            <v-alert dense type="info" class="font-weight-bold">
+              問題にあるメソッドを実行した時の結果を答えなさい
+            </v-alert>
+            <v-simple-table class="table">
+              <template v-slot:default>
+                <caption class="text-left">
+                  testテーブル
+                </caption>
+                <thead>
+                  <tr>
+                    <th class="text-left">a</th>
+                    <th class="text-left">b</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in data" :key="item.name">
+                    <td>{{ item.a }}</td>
+                    <td>{{ item.b }}</td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+            <pre class="mb-1">$db = MDB2::connect(DSN);</pre>
+          </template>
+          <v-expansion-panels focusable>
+            <template v-for="item in lists">
+              <v-expansion-panel v-if="item.type == select" :key="item.id">
+                <v-checkbox
+                  class="checkbox"
+                  on-icon="mdi-star"
+                  off-icon="mdi-star-outline"
+                  color="orange"
+                  v-model="favorites"
+                  :value="item.id"
+                  @change="storage(item.id, item.type)"
+                >
+                </v-checkbox>
+                <v-expansion-panel-header>
+                  <pre>{{ item.function }}</pre>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <pre>{{ item.result }}</pre>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel v-else-if="select == 'all'" :key="item.id">
+                <v-checkbox
+                  class="checkbox"
+                  on-icon="mdi-star"
+                  off-icon="mdi-star-outline"
+                  color="orange"
+                  v-model="favorites"
+                  :value="item.id"
+                  @change="storage(item.id, item.type)"
+                >
+                </v-checkbox>
+                <v-expansion-panel-header>
+                  <pre>{{ item.function }}</pre>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <pre>{{ item.result }}</pre>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+              <v-expansion-panel
+                v-else-if="select == 'favorites' && isId(item.id)"
+                :key="item.id"
+              >
+                <v-checkbox
+                  class="checkbox"
+                  on-icon="mdi-star"
+                  off-icon="mdi-star-outline"
+                  color="orange"
+                  v-model="favorites"
+                  :value="item.id"
+                  @change="storage(item.id, item.type)"
+                >
+                </v-checkbox>
+                <v-expansion-panel-header>
+                  <pre>{{ item.function }}</pre>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <pre>{{ item.result }}</pre>
+                </v-expansion-panel-content>
+              </v-expansion-panel>
+            </template>
+          </v-expansion-panels>
+          <v-btn
+            fab
+            large
+            bottom
+            right
+            fixed
+            color="primary"
+            @click="$vuetify.goTo(0)"
+          >
+            <v-icon>mdi-chevron-up</v-icon>
+          </v-btn>
+        </template>
       </v-container>
     </v-main>
   </v-app>
@@ -243,6 +252,7 @@ pre {
 
 .checkbox {
   padding-left: 22px;
+  width: 56px;
 }
 
 .v-expansion-panel-header {
@@ -252,4 +262,8 @@ pre {
 .table {
   max-width: 500px !important;
 }
+
+/* .select {
+  width: 56px !important;
+} */
 </style>
