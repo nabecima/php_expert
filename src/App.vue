@@ -216,7 +216,6 @@ export default {
       "https://script.google.com/macros/s/AKfycbyzvluUr38dkwWSOxO2GTAravixfBJNkBEJ4mc1VGC4X9Np-CwTSZH2gZaDIyVZcAVL/exec";
     axios.get(SHEET, { crossDomain: true }).then((res) => {
       this.lists = this.shuffle(res.data.qa);
-      console.log(res.data);
       this.types = res.data.types;
       for (let key in localStorage) {
         this.favorites.push(key);
