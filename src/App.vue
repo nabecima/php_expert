@@ -20,13 +20,14 @@
           ></v-progress-circular>
         </div>
         <template v-else>
-          <v-row>
+          <v-row class="mb-2">
             <v-col class="flex-grow-0 flex-shrink-0">
               <v-select
                 class="select"
                 v-model="select"
                 :items="types"
                 label="Solo field"
+                hide-details="false"
                 solo
               ></v-select
             ></v-col>
@@ -35,16 +36,26 @@
                 v-model="count"
                 :items="counts"
                 label="Solo field"
+                hide-details="false"
                 solo
               ></v-select
             ></v-col>
             <v-col class="flex-grow-0 flex-shrink-0">
-              <v-btn class="btn" color="primary" @click="lists = shuffle(lists)"
+              <v-btn
+                class="btn"
+                height="48"
+                color="primary"
+                @click="lists = shuffle(lists)"
                 >Shuffle</v-btn
               >
             </v-col>
             <v-col class="flex-grow-0 flex-shrink-0">
-              <v-btn class="btn" color="primary" @click="clear" :disabled="flag"
+              <v-btn
+                class="btn"
+                height="48"
+                color="primary"
+                @click="clear"
+                :disabled="flag"
                 >Reset</v-btn
               >
             </v-col>
