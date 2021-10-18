@@ -30,20 +30,21 @@
                 solo
               ></v-select
             ></v-col>
+            <v-col v-if="select == 'random'" class="flex-grow-0 flex-shrink-0">
+              <v-select
+                v-model="count"
+                :items="counts"
+                label="Solo field"
+                solo
+              ></v-select
+            ></v-col>
             <v-col class="flex-grow-0 flex-shrink-0">
-              <v-btn
-                class="reset"
-                color="primary"
-                @click="lists = shuffle(lists)"
+              <v-btn class="btn" color="primary" @click="lists = shuffle(lists)"
                 >Shuffle</v-btn
               >
             </v-col>
             <v-col class="flex-grow-0 flex-shrink-0">
-              <v-btn
-                class="reset"
-                color="primary"
-                @click="clear"
-                :disabled="flag"
+              <v-btn class="btn" color="primary" @click="clear" :disabled="flag"
                 >Reset</v-btn
               >
             </v-col>
@@ -99,7 +100,7 @@
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <v-expansion-panel
-                v-else-if="select == 'random' && i <= 20"
+                v-else-if="select == 'random' && i < count"
                 :key="item.id"
               >
                 <v-checkbox
@@ -169,6 +170,8 @@ export default {
       lists: [],
       types: [],
       select: "random",
+      count: 20,
+      counts: [10, 20, 30, 40, 50, 60],
       loading: true,
       favorites: [],
       flag: true,
@@ -248,7 +251,7 @@ pre {
   z-index: 100;
 }
 
-.reset {
+.btn {
   padding: 12px;
 }
 
@@ -265,7 +268,7 @@ pre {
   max-width: 500px !important;
 }
 
-/* .select {
-  width: 56px !important;
-} */
+.select {
+  width: 125px !important;
+}
 </style>
