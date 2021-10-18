@@ -79,7 +79,7 @@
             <pre class="mb-1">$db = MDB2::connect(DSN);</pre>
           </template>
           <v-expansion-panels focusable>
-            <template v-for="item in lists">
+            <template v-for="(item, i) in lists">
               <v-expansion-panel v-if="item.type == select" :key="item.id">
                 <v-checkbox
                   class="checkbox"
@@ -98,7 +98,10 @@
                   <pre>{{ item.result }}</pre>
                 </v-expansion-panel-content>
               </v-expansion-panel>
-              <v-expansion-panel v-else-if="select == 'all'" :key="item.id">
+              <v-expansion-panel
+                v-else-if="select == 'random' && i <= 20"
+                :key="item.id"
+              >
                 <v-checkbox
                   class="checkbox"
                   on-icon="mdi-star"
@@ -165,7 +168,7 @@ export default {
     return {
       lists: [],
       types: [],
-      select: "all",
+      select: "random",
       loading: true,
       favorites: [],
       flag: true,
