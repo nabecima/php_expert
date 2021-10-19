@@ -104,10 +104,10 @@
                 >
                 </v-checkbox>
                 <v-expansion-panel-header>
-                  <pre>{{ item.function }}</pre>
+                  <pre>{{ item.question }}</pre>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <pre>{{ item.result }}</pre>
+                  <pre>{{ item.answer }}</pre>
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <v-expansion-panel
@@ -125,10 +125,10 @@
                 >
                 </v-checkbox>
                 <v-expansion-panel-header>
-                  <pre>{{ item.function }}</pre>
+                  <pre>{{ item.question }}</pre>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <pre>{{ item.result }}</pre>
+                  <pre>{{ item.answer }}</pre>
                 </v-expansion-panel-content>
               </v-expansion-panel>
               <v-expansion-panel
@@ -146,10 +146,10 @@
                 >
                 </v-checkbox>
                 <v-expansion-panel-header>
-                  <pre>{{ item.function }}</pre>
+                  <pre>{{ item.question }}</pre>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
-                  <pre>{{ item.result }}</pre>
+                  <pre>{{ item.answer }}</pre>
                 </v-expansion-panel-content>
               </v-expansion-panel>
             </template>
