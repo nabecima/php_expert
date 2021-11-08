@@ -1,15 +1,55 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
-      <v-toolbar-title class="font-weight-bold title" @click="$vuetify.goTo(0)"
-        >PHP5技術者認定試験上級</v-toolbar-title
-      >
+    <v-navigation-drawer app clipped right v-model="drawer">
+      <v-list nav dense>
+        <v-list-item-group v-model="group">
+          <v-list-item v-if="!isSignedin" @click="signIn">
+            <v-list-item-icon>
+              <v-icon>mdi-login</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Sign In</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-else @click="signOut">
+            <v-list-item-icon>
+              <v-icon>mdi-logout</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Sign Out</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar app color="primary" dark clipped-right>
+      <div class="my-container d-flex align-center">
+        <v-toolbar-title
+          class="font-weight-bold title"
+          @click="$vuetify.goTo(0)"
+          >PHP5技術者認定試験上級</v-toolbar-title
+        >
 
-      <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
+        <v-toolbar-items class="hidden-sm-and-down">
+          <v-btn v-if="!isSignedin" text @click="signIn">
+            <v-icon class="mr-1">mdi-login</v-icon>Sign In</v-btn
+          >
+          <v-btn v-else text @click="signOut">
+            <v-icon class="mr-1">mdi-logout</v-icon>Sign Out</v-btn
+          >
+        </v-toolbar-items>
+
+        <v-app-bar-nav-icon
+          @click.stop="drawer = !drawer"
+          class="hidden-md-and-up hamburger"
+        ></v-app-bar-nav-icon>
+      </div>
     </v-app-bar>
 
     <v-main>
       <v-container>
+        <p>{{ favorites }}</p>
         <div class="progress" v-if="loading">
           <v-progress-circular
             :size="50"
@@ -51,6 +91,7 @@
             </v-col>
             <v-col class="flex-grow-0 flex-shrink-0">
               <v-btn
+                v-if="isSignedin"
                 class="btn"
                 height="48"
                 color="primary"
@@ -90,20 +131,21 @@
             </v-simple-table>
             <pre class="mb-1">$db = MDB2::connect(DSN);</pre>
           </template>
-          <v-expansion-panels focusable>
+          <v-expansion-panels>
             <template v-for="(item, i) in lists">
               <v-expansion-panel v-if="item.type == select" :key="item.id">
                 <v-checkbox
+                  v-if="isSignedin"
                   class="checkbox"
                   on-icon="mdi-star"
                   off-icon="mdi-star-outline"
                   color="orange"
                   v-model="favorites"
                   :value="item.id"
-                  @change="storage(item.id, item.type)"
+                  @change="storage(item.id)"
                 >
                 </v-checkbox>
-                <v-expansion-panel-header>
+                <v-expansion-panel-header :class="{ active: isSignedin }">
                   <pre>{{ item.question }}</pre>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
@@ -115,16 +157,17 @@
                 :key="item.id"
               >
                 <v-checkbox
+                  v-if="isSignedin"
                   class="checkbox"
                   on-icon="mdi-star"
                   off-icon="mdi-star-outline"
                   color="orange"
                   v-model="favorites"
                   :value="item.id"
-                  @change="storage(item.id, item.type)"
+                  @change="storage(item.id)"
                 >
                 </v-checkbox>
-                <v-expansion-panel-header>
+                <v-expansion-panel-header :class="{ active: isSignedin }">
                   <pre>{{ item.question }}</pre>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
@@ -136,16 +179,17 @@
                 :key="item.id"
               >
                 <v-checkbox
+                  v-if="isSignedin"
                   class="checkbox"
                   on-icon="mdi-star"
                   off-icon="mdi-star-outline"
                   color="orange"
                   v-model="favorites"
                   :value="item.id"
-                  @change="storage(item.id, item.type)"
+                  @change="storage(item.id)"
                 >
                 </v-checkbox>
-                <v-expansion-panel-header>
+                <v-expansion-panel-header :class="{ active: isSignedin }">
                   <pre>{{ item.question }}</pre>
                 </v-expansion-panel-header>
                 <v-expansion-panel-content>
@@ -173,11 +217,30 @@
 
 <script>
 import axios from "axios";
+import {
+  getAuth,
+  signOut,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  setDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+  deleteDoc,
+} from "firebase/firestore";
+
 export default {
   name: "App",
 
   data() {
     return {
+      drawer: false,
+      group: null,
       lists: [],
       types: [],
       select: "random",
@@ -190,7 +253,38 @@ export default {
         { a: 1, b: 10 },
         { a: 2, b: 20 },
       ],
+      menus: [
+        {
+          icon: "mdi-account-box-outline",
+          text: "Sign Up",
+          isSignedin: false,
+        },
+        {
+          icon: "mdi-login",
+          text: "Sign In",
+          isSignedin: false,
+        },
+        {
+          icon: "mdi-logout",
+          text: "Sign Out",
+          isSignedin: true,
+        },
+      ],
+      user: {},
+      isSignedin: false,
     };
+  },
+  watch: {
+    group() {
+      this.drawer = false;
+    },
+    favorites(next) {
+      if (next.length > 0) {
+        this.flag = false;
+      } else {
+        this.flag = true;
+      }
+    },
   },
   methods: {
     shuffle([...array]) {
@@ -200,45 +294,84 @@ export default {
       }
       return array;
     },
-    storage(id, type) {
-      if (this.favorites.indexOf(id) !== -1) {
-        localStorage.setItem(id, type);
-      } else {
-        localStorage.removeItem(id);
-      }
+    async storage(id) {
+      const db = getFirestore();
 
-      this.flag = this.checkLocalStorage();
+      if (this.favorites.indexOf(id) !== -1) {
+        try {
+          await setDoc(doc(db, "favorites", this.user.id + id), {
+            user_id: this.user.id,
+            question_id: id,
+          });
+          // await addDoc(collection(db, "favorites"), {
+          //   user_id: this.user.id,
+          //   question_id: id,
+          // });
+        } catch (e) {
+          console.error("Error adding document: ", e);
+        }
+      } else {
+        deleteDoc(doc(db, "favorites", this.user.id + id));
+      }
     },
-    clear() {
+    async clear() {
       if (confirm("チェックした問題を全てリセットしますか？")) {
-        localStorage.clear();
+        const db = getFirestore();
+        const favRef = collection(db, "favorites");
+        const q = query(favRef, where("user_id", "==", this.user.id));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((document) => {
+          deleteDoc(doc(db, "favorites", document.id));
+        });
+
         this.favorites = [];
         this.flag = true;
       }
     },
     isId(id) {
-      return id in localStorage;
+      return this.favorites.includes(id);
     },
-    checkLocalStorage() {
-      if (localStorage.length === 0) {
-        return true;
-      } else {
-        return false;
-      }
+    signIn() {
+      const auth = getAuth();
+      const provider = new GoogleAuthProvider();
+
+      signInWithPopup(auth, provider)
+        .then(async (result) => {
+          const user = result.user;
+          this.user.id = user.uid;
+          this.user.name = user.displayName;
+          this.user.email = user.email;
+          this.user.photoURL = user.photoURL;
+
+          const db = getFirestore();
+          const favRef = collection(db, "favorites");
+          const q = query(favRef, where("user_id", "==", this.user.id));
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            this.favorites.push(doc.data().question_id);
+          });
+
+          this.isSignedin = true;
+        })
+        .catch((error) => {
+          console.log(error.message);
+        });
+    },
+    signOut() {
+      const auth = getAuth();
+      signOut(auth).then(() => {
+        this.isSignedin = false;
+      });
     },
   },
 
-  mounted() {
+  async mounted() {
     const SHEET =
       "https://script.google.com/macros/s/AKfycbyzvluUr38dkwWSOxO2GTAravixfBJNkBEJ4mc1VGC4X9Np-CwTSZH2gZaDIyVZcAVL/exec";
     axios.get(SHEET, { crossDomain: true }).then((res) => {
       this.lists = this.shuffle(res.data.qa);
       this.types = res.data.types;
-      for (let key in localStorage) {
-        this.favorites.push(key);
-      }
       this.loading = false;
-      this.flag = this.checkLocalStorage();
     });
   },
 };
@@ -246,6 +379,12 @@ export default {
 <style>
 .title {
   cursor: pointer;
+}
+
+.my-container {
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
 }
 
 pre {
@@ -271,7 +410,7 @@ pre {
   width: 56px;
 }
 
-.v-expansion-panel-header {
+.v-expansion-panel-header.active {
   padding-top: 0 !important;
 }
 
@@ -282,4 +421,30 @@ pre {
 .select {
   width: 125px !important;
 }
+
+.hamburger {
+  position: absolute !important;
+  right: 0;
+}
+
+@media screen and (min-width: 960px) {
+  .my-container {
+    max-width: 900px;
+  }
+}
+
+@media screen and (min-width: 1264px) {
+  .my-container {
+    max-width: 1185px;
+  }
+}
+
+@media screen and (min-width: 1904px) {
+  .my-container {
+    max-width: 1785px;
+  }
+}
+
+/* @media screen and (min-width: ) {
+} */
 </style>
