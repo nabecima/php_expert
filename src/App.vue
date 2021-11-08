@@ -46,7 +46,7 @@
               <v-avatar size="48" v-if="user">
                 <img :src="user.photoURL" alt="icon" />
               </v-avatar>
-              <v-icon v-else>mdi-account</v-icon>
+              <v-icon v-else>mdi-login</v-icon>
             </v-btn>
           </template>
           <v-list>
