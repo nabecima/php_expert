@@ -49,7 +49,6 @@
 
     <v-main>
       <v-container>
-        <p>{{ favorites }}</p>
         <div class="progress" v-if="loading">
           <v-progress-circular
             :size="50"
