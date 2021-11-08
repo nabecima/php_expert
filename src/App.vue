@@ -40,10 +40,40 @@
           >
         </v-toolbar-items>
 
-        <v-app-bar-nav-icon
-          @click.stop="drawer = !drawer"
-          class="hidden-md-and-up hamburger"
-        ></v-app-bar-nav-icon>
+        <v-menu bottom rounded offset-y min-width="200px">
+          <template v-slot:activator="{ on }">
+            <v-btn icon large v-on="on" class="hidden-md-and-up">
+              <v-avatar size="48" v-if="user">
+                <img :src="user.photoURL" alt="icon" />
+              </v-avatar>
+              <v-icon v-else>mdi-account</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-subheader v-if="user" class="justify-center">{{
+              user.displayName
+            }}</v-subheader>
+            <v-subheader v-else class="justify-center"
+              >ログインしてください</v-subheader
+            >
+            <v-list-item v-if="!user" @click="signIn">
+              <v-list-item-icon>
+                <v-icon>mdi-login</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>Sign In</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+            <v-list-item v-else @click="signOut">
+              <v-list-item-icon>
+                <v-icon>mdi-logout</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>Sign Out</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </div>
     </v-app-bar>
 
@@ -219,8 +249,6 @@ import axios from "axios";
 import {
   getAuth,
   signOut,
-  // signInWithPopup,
-  // getRedirectResult,
   onAuthStateChanged,
   signInWithRedirect,
   GoogleAuthProvider,
@@ -305,10 +333,6 @@ export default {
             user_id: this.user.id,
             question_id: id,
           });
-          // await addDoc(collection(db, "favorites"), {
-          //   user_id: this.user.id,
-          //   question_id: id,
-          // });
         } catch (e) {
           console.error("Error adding document: ", e);
         }
@@ -350,6 +374,8 @@ export default {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         this.user.id = user.uid;
+        this.user.photoURL = user.photoURL;
+        this.user.displayName = user.displayName;
         const db = getFirestore();
         const favRef = collection(db, "favorites");
         const q = query(favRef, where("user_id", "==", this.user.id));
@@ -359,6 +385,8 @@ export default {
         });
 
         this.isSignedin = true;
+      } else {
+        this.user = null;
       }
     });
   },
