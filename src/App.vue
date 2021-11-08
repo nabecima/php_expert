@@ -219,7 +219,10 @@ import axios from "axios";
 import {
   getAuth,
   signOut,
-  signInWithPopup,
+  // signInWithPopup,
+  // getRedirectResult,
+  onAuthStateChanged,
+  signInWithRedirect,
   GoogleAuthProvider,
 } from "firebase/auth";
 import {
@@ -333,28 +336,7 @@ export default {
     signIn() {
       const auth = getAuth();
       const provider = new GoogleAuthProvider();
-
-      signInWithPopup(auth, provider)
-        .then(async (result) => {
-          const user = result.user;
-          this.user.id = user.uid;
-          this.user.name = user.displayName;
-          this.user.email = user.email;
-          this.user.photoURL = user.photoURL;
-
-          const db = getFirestore();
-          const favRef = collection(db, "favorites");
-          const q = query(favRef, where("user_id", "==", this.user.id));
-          const querySnapshot = await getDocs(q);
-          querySnapshot.forEach((doc) => {
-            this.favorites.push(doc.data().question_id);
-          });
-
-          this.isSignedin = true;
-        })
-        .catch((error) => {
-          console.log(error.message);
-        });
+      signInWithRedirect(auth, provider);
     },
     signOut() {
       const auth = getAuth();
@@ -362,6 +344,23 @@ export default {
         this.isSignedin = false;
       });
     },
+  },
+  created() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        this.user.id = user.uid;
+        const db = getFirestore();
+        const favRef = collection(db, "favorites");
+        const q = query(favRef, where("user_id", "==", this.user.id));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          this.favorites.push(doc.data().question_id);
+        });
+
+        this.isSignedin = true;
+      }
+    });
   },
 
   async mounted() {
