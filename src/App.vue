@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer app clipped right v-model="drawer">
+    <!-- <v-navigation-drawer app clipped right v-model="drawer">
       <v-list nav dense>
         <v-list-item-group v-model="group">
           <v-list-item v-if="!isSignedin" @click="signIn">
@@ -21,7 +21,7 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <v-app-bar app color="primary" dark clipped-right>
       <div class="my-container d-flex align-center">
         <v-toolbar-title
@@ -32,7 +32,7 @@
 
         <v-spacer></v-spacer>
         <v-toolbar-items class="hidden-sm-and-down">
-          <v-btn v-if="!isSignedin" text @click="signIn">
+          <v-btn v-if="!user" text @click="signIn">
             <v-icon class="mr-1">mdi-login</v-icon>Sign In</v-btn
           >
           <v-btn v-else text @click="signOut">
@@ -42,11 +42,13 @@
 
         <v-menu bottom rounded offset-y min-width="200px">
           <template v-slot:activator="{ on }">
-            <v-btn icon large v-on="on" class="hidden-md-and-up">
-              <v-avatar size="48" v-if="user">
+            <v-btn v-if="user" icon large v-on="on" class="hidden-md-and-up">
+              <v-avatar size="48">
                 <img :src="user.photoURL" alt="icon" />
               </v-avatar>
-              <v-icon v-else>mdi-login</v-icon>
+            </v-btn>
+            <v-btn v-else icon large @click="signIn" class="hidden-md-and-up">
+              <v-icon>mdi-login</v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -56,15 +58,8 @@
             <v-subheader v-else class="justify-center"
               >ログインしてください</v-subheader
             >
-            <v-list-item v-if="!user" @click="signIn">
-              <v-list-item-icon>
-                <v-icon>mdi-login</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>Sign In</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item v-else @click="signOut">
+
+            <v-list-item v-if="user" @click="signOut">
               <v-list-item-icon>
                 <v-icon>mdi-logout</v-icon>
               </v-list-item-icon>
