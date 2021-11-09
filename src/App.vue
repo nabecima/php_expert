@@ -31,7 +31,7 @@
         >
 
         <v-spacer></v-spacer>
-        <v-toolbar-items class="hidden-sm-and-down">
+        <v-toolbar-items v-if="!loading" class="hidden-sm-and-down">
           <v-btn v-if="!user" text @click="signIn">
             <v-icon class="mr-1">mdi-login</v-icon>Sign In</v-btn
           >
@@ -40,7 +40,7 @@
           >
         </v-toolbar-items>
 
-        <v-menu bottom rounded offset-y min-width="200px">
+        <v-menu v-if="!loading" bottom rounded offset-y min-width="200px">
           <template v-slot:activator="{ on }">
             <v-btn v-if="user" icon large v-on="on" class="hidden-md-and-up">
               <v-avatar size="48">
