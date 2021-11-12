@@ -1,27 +1,5 @@
 <template>
   <v-app>
-    <!-- <v-navigation-drawer app clipped right v-model="drawer">
-      <v-list nav dense>
-        <v-list-item-group v-model="group">
-          <v-list-item v-if="!isSignedin" @click="signIn">
-            <v-list-item-icon>
-              <v-icon>mdi-login</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Sign In</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item v-else @click="signOut">
-            <v-list-item-icon>
-              <v-icon>mdi-logout</v-icon>
-            </v-list-item-icon>
-            <v-list-item-content>
-              <v-list-item-title>Sign Out</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-navigation-drawer> -->
     <v-app-bar app color="primary" dark clipped-right>
       <div class="my-container d-flex align-center">
         <v-toolbar-title
@@ -59,14 +37,24 @@
               >ログインしてください</v-subheader
             >
 
-            <v-list-item v-if="user" @click="signOut">
-              <v-list-item-icon>
-                <v-icon>mdi-logout</v-icon>
-              </v-list-item-icon>
-              <v-list-item-content>
-                <v-list-item-title>Sign Out</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
+            <template v-if="user">
+              <v-list-item @click="select = 'favorites'">
+                <v-list-item-icon>
+                  <v-icon>mdi-heart-outline</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>Favorites</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item @click="signOut">
+                <v-list-item-icon>
+                  <v-icon>mdi-logout</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title>Sign Out</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
           </v-list>
         </v-menu>
       </div>
