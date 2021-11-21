@@ -81,6 +81,7 @@
                 label="Solo field"
                 hide-details="false"
                 solo
+                @change="keepSelected(select)"
               ></v-select
             ></v-col>
             <v-col v-if="select == 'random'" class="flex-grow-0 flex-shrink-0">
@@ -351,6 +352,9 @@ export default {
         this.isSignedin = false;
       });
     },
+    keepSelected(val) {
+      sessionStorage.setItem("name", val);
+    },
   },
   created() {
     const auth = getAuth();
@@ -381,6 +385,10 @@ export default {
       this.lists = this.shuffle(res.data.qa);
       this.types = res.data.types;
       this.loading = false;
+
+      if (sessionStorage.getItem("name")) {
+        this.select = sessionStorage.getItem("name");
+      }
     });
   },
 };
