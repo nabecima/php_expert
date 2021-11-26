@@ -147,6 +147,9 @@
           <template v-else-if="select == 'web'">
             <v-alert dense type="info" class="font-weight-bold">
               $_SERVERに関して、http://example.jp/php/foo.php/bar?a=bにGETでリクエストしたものとする
+              リモートホスト名: hoge.example.com リモートIPアドレス:
+              192.168.0.250 ブラウザ情報: Mozilla/... 参照元URL:
+              http?//www.example.com/last_page.html
             </v-alert>
           </template>
           <v-expansion-panels>
