@@ -471,6 +471,8 @@ pre {
   }
 }
 
-/* @media screen and (min-width: ) {
-} */
+.v-alert__content {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
 </style>
