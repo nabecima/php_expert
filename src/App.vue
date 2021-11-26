@@ -144,6 +144,11 @@
             </v-simple-table>
             <pre class="mb-1">$db = MDB2::connect(DSN);</pre>
           </template>
+          <template v-else-if="select == 'web'">
+            <v-alert dense type="info" class="font-weight-bold">
+              $_SERVERに関して、http://example.jp/php/foo.php/bar?a=bにGETでリクエストしたものとする
+            </v-alert>
+          </template>
           <v-expansion-panels>
             <template v-for="(item, i) in lists">
               <v-expansion-panel v-if="item.type == select" :key="item.id">
